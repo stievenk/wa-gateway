@@ -112,5 +112,19 @@ export const createSessionController = () => {
     });
   });
 
+  app.all("/check", createKeyMiddleware(), 
+    requestValidator("query", startSessionSchema), 
+    async (c) => {
+    const payload = c.req.valid("query");
+    const isExist = whatsapp.getSession(payload.session);
+    let status = "not-connected";
+    if (isExist) {
+      status = "connected";
+    } 
+    return c.json({
+      status: status,
+    });
+  });
+
   return app;
 };

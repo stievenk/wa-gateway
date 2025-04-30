@@ -66,10 +66,11 @@ whastapp.onConnected((session) => {
   console.log(`session: '${session}' connected`);
 });
 
+const WEBHOOK_BASE_URL = env.WEBHOOK_BASE_URL || 'http://localhost/projects/i.php';
 // Implement Webhook
-if (env.WEBHOOK_BASE_URL) {
+if (WEBHOOK_BASE_URL) {
   const webhookProps: CreateWebhookProps = {
-    baseUrl: env.WEBHOOK_BASE_URL,
+    baseUrl: WEBHOOK_BASE_URL,
   };
 
   // message webhook
