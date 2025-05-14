@@ -50,7 +50,8 @@ app.route("/message", createMessageController());
  */
 app.route("/profile", createProfileController());
 
-const port = env.PORT;
+// const port = env.PORT;
+const port = 6060;
 
 serve(
   {
@@ -66,7 +67,9 @@ whastapp.onConnected((session) => {
   console.log(`session: '${session}' connected`);
 });
 
-const WEBHOOK_BASE_URL = env.WEBHOOK_BASE_URL || 'http://localhost/projects/i.php';
+// const WEBHOOK_BASE_URL = env.WEBHOOK_BASE_URL;
+// const WEBHOOK_BASE_URL = 'http://192.168.100.115/wa.php?command=';
+const WEBHOOK_BASE_URL = 'https://app.photoboothmanado.com/wa.php?command=';
 // Implement Webhook
 if (WEBHOOK_BASE_URL) {
   const webhookProps: CreateWebhookProps = {

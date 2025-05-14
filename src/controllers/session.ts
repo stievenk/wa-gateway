@@ -28,9 +28,10 @@ export const createSessionController = () => {
 
       const isExist = whatsapp.getSession(payload.session);
       if (isExist) {
-        throw new HTTPException(400, {
-          message: "Session already exist",
-        });
+        // throw new HTTPException(400, {
+        //   message: "Session already exist",
+        // });
+        return c.json({ message : 'Session already exist'});
       }
 
       const qr = await new Promise<string | null>(async (r) => {
@@ -66,9 +67,10 @@ export const createSessionController = () => {
 
       const isExist = whatsapp.getSession(payload.session);
       if (isExist) {
-        throw new HTTPException(400, {
-          message: "Session already exist",
-        });
+        // throw new HTTPException(400, {
+        //   message: "Session already exist",
+        // });
+        return c.json({ message : 'Session already exist'});
       }
 
       const qr = await new Promise<string | null>(async (r) => {
