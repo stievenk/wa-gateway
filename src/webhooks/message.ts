@@ -10,19 +10,23 @@ import {
 type WebhookMessageBody = {
   session: string;
   from: string | null;
+  isMe: string | null;
   message: string | null;
-
+  pushName : string | null;
+  participant : string | null;
   media: {
     image: string | null;
     video: string | null;
     document: string | null;
     audio: string | null;
+    rawdata : string | null;
   };
 };
 
 export const createWebhookMessage =
   (props: CreateWebhookProps) => async (message: MessageReceived) => {
-    if (message.key.fromMe || message.key.remoteJid?.includes("broadcast"))
+  //  if (message.key.fromMe || message.key.remoteJid?.includes("broadcast"))
+    if (message.key.remoteJid?.includes("broadcast"))
       return;
 
     const endpoint = `${props.baseUrl}/message`;
@@ -31,10 +35,15 @@ export const createWebhookMessage =
     const video = await handleWebhookVideoMessage(message);
     const document = await handleWebhookDocumentMessage(message);
     const audio = await handleWebhookAudioMessage(message);
+    const rawdata = JSON.stringify(message);
+    const pushName = message.pushName || '';
+    const participant = message.key?.participant || '';
+    const isMe = message.key?.fromMe ? 'true' : 'false';
 
     const body = {
       session: message.sessionId,
       from: message.key.remoteJid ?? null,
+      pushName, participant, isMe,
       message:
         message.message?.conversation ||
         message.message?.extendedTextMessage?.text ||
@@ -54,6 +63,7 @@ export const createWebhookMessage =
         video,
         document,
         audio,
+	      rawdata
       },
     } satisfies WebhookMessageBody;
     webhookClient.post(endpoint, body).catch(console.error);
