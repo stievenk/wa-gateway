@@ -13,7 +13,9 @@ import { CreateWebhookProps } from "./webhooks";
 import { createWebhookMessage } from "./webhooks/message";
 import { createWebhookSession } from "./webhooks/session";
 import { createProfileController } from "./controllers/profile";
+import { createWebhookContact } from "./webhooks/contact";
 import { serveStatic } from "@hono/node-server/serve-static";
+import { toDataURL } from "qrcode";
 
 const app = new Hono();
 
@@ -68,8 +70,8 @@ whastapp.onConnected((session) => {
 });
 
 // const WEBHOOK_BASE_URL = env.WEBHOOK_BASE_URL;
-// const WEBHOOK_BASE_URL = 'http://192.168.100.115/wa.php?command=';
-const WEBHOOK_BASE_URL = 'https://app.photoboothmanado.com/wa.php?command=';
+const WEBHOOK_BASE_URL = 'http://192.168.61.117/wa.php?command=';
+// const WEBHOOK_BASE_URL = 'https://app.photoboothmanado.com/wa.php?command=';
 // Implement Webhook
 if (WEBHOOK_BASE_URL) {
   const webhookProps: CreateWebhookProps = {
@@ -84,15 +86,29 @@ if (WEBHOOK_BASE_URL) {
 
   whastapp.onConnected((session) => {
     console.log(`session: '${session}' connected`);
-    webhookSession({ session, status: "connected" });
+    webhookSession({ session, status: "connected", qr : null });
   });
   whastapp.onConnecting((session) => {
     console.log(`session: '${session}' connecting`);
-    webhookSession({ session, status: "connecting" });
+    webhookSession({ session, status: "connecting", qr : null });
   });
   whastapp.onDisconnected((session) => {
     console.log(`session: '${session}' disconnected`);
-    webhookSession({ session, status: "disconnected" });
+    webhookSession({ session, status: "disconnected", qr : null });
+  });
+
+  whastapp.onQRUpdated(async (data) => {
+    const qr = await toDataURL(data.qr);
+    console.log(`session: '${data.sessionId}' qr updated`);
+    // console.log(qr);
+    webhookSession({ session : data.sessionId, status: "qr-update", qr });
+  });
+
+  const webhookContact = createWebhookContact(webhookProps);
+  whastapp.onContactUpdate(async (data) => {
+    // console.log(data);
+    // console.log(`session: '${data.sessionId}' contact updated`);
+    webhookContact({ session : data.sessionId, contacts : data.contacts });
   });
 }
 // End Implement Webhook

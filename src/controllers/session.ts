@@ -119,6 +119,7 @@ export const createSessionController = () => {
     async (c) => {
     const payload = c.req.valid("query");
     const isExist = whatsapp.getSession(payload.session);
+    const isRun = whatsapp.isRunning(payload.session);
     let status = "not-connected";
     if (isExist) {
       status = "connected";

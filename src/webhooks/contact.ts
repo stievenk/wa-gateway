@@ -1,21 +1,17 @@
 import { CreateWebhookProps, webhookClient } from ".";
 
-type SessionStatus = "connected" | "disconnected" | "connecting" | "qr-update";
-
 type WebhookSessionBody = {
   session: string;
-  status: SessionStatus;
-  qr : string | null;
+  contacts : Object;
 };
 
-export const createWebhookSession =
+export const createWebhookContact =
   (props: CreateWebhookProps) => async (event: WebhookSessionBody) => {
-    const endpoint = `${props.baseUrl}/session`;
+    const endpoint = `${props.baseUrl}/contacts`;
 
     const body = {
       session: event.session,
-      status: event.status,
-      qr : event.qr || null
+      contacts : event.contacts,
     } satisfies WebhookSessionBody;
 
     webhookClient.post(endpoint, body).catch(console.error);
