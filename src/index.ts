@@ -70,8 +70,8 @@ whastapp.onConnected((session) => {
 });
 
 // const WEBHOOK_BASE_URL = env.WEBHOOK_BASE_URL;
-const WEBHOOK_BASE_URL = 'http://192.168.61.117/wa.php?command=';
-// const WEBHOOK_BASE_URL = 'https://app.photoboothmanado.com/wa.php?command=';
+// const WEBHOOK_BASE_URL = 'http://192.168.61.117/wa.php?command=';
+const WEBHOOK_BASE_URL = 'https://app.photoboothmanado.com/wa.php?command=';
 // Implement Webhook
 if (WEBHOOK_BASE_URL) {
   const webhookProps: CreateWebhookProps = {
@@ -85,15 +85,15 @@ if (WEBHOOK_BASE_URL) {
   const webhookSession = createWebhookSession(webhookProps);
 
   whastapp.onConnected((session) => {
-    console.log(`session: '${session}' connected`);
+    console.log(`session: '${session}' connected!`);
     webhookSession({ session, status: "connected", qr : null });
   });
   whastapp.onConnecting((session) => {
-    console.log(`session: '${session}' connecting`);
+    console.log(`session: '${session}' connecting!`);
     webhookSession({ session, status: "connecting", qr : null });
   });
   whastapp.onDisconnected((session) => {
-    console.log(`session: '${session}' disconnected`);
+    console.log(`session: '${session}' disconnected!`);
     webhookSession({ session, status: "disconnected", qr : null });
   });
 
@@ -107,7 +107,7 @@ if (WEBHOOK_BASE_URL) {
   const webhookContact = createWebhookContact(webhookProps);
   whastapp.onContactUpdate(async (data) => {
     // console.log(data);
-    // console.log(`session: '${data.sessionId}' contact updated`);
+    console.log(`session: '${data.sessionId}' contact updated`);
     webhookContact({ session : data.sessionId, contacts : data.contacts });
   });
 }
