@@ -19,8 +19,7 @@ type WebhookMessageBody = {
     video: string | null;
     document: string | null;
     audio: string | null;
-    rawdata : string | null;
-  };
+  }, rawdata : string;
 };
 
 export const createWebhookMessage =
@@ -42,7 +41,7 @@ export const createWebhookMessage =
 
     const body = {
       session: message.sessionId,
-      from: message.key.remoteJid ?? null,
+      from: message.key.remoteJidAlt || message.key.remoteJid || null,
       pushName, participant, isMe,
       message:
         message.message?.conversation ||
@@ -53,6 +52,7 @@ export const createWebhookMessage =
         message.message?.contactMessage?.displayName ||
         message.message?.locationMessage?.comment ||
         message.message?.liveLocationMessage?.caption ||
+        message.message?.stickerMessage?.url ||
         message.message?.templateMessage?.hydratedTemplate?.hydratedContentText ||
         null,
 
@@ -63,9 +63,9 @@ export const createWebhookMessage =
         image,
         video,
         document,
-        audio,
-	      rawdata
+        audio
       },
+      rawdata
     } satisfies WebhookMessageBody;
     webhookClient.post(endpoint, body).catch(console.error);
   };

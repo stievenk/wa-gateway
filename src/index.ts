@@ -101,12 +101,12 @@ if (WEBHOOK_BASE_URL) {
     webhookSession({ session : data.sessionId, status: "qr-update", qr });
   });
 
-  const webhookContact = createWebhookContact(webhookProps);
-  whastapp.onContactUpdate(async (data) => {
-    // console.log(data);
-    console.log(`session: '${data.sessionId}' contact updated`);
-    webhookContact({ session : data.sessionId, contacts : data.contacts });
-  });
+  // const webhookContact = createWebhookContact(webhookProps);
+  // whastapp.onContactUpdate(async (data) => {
+  //   // console.log(data);
+  //   console.log(`session: '${data.sessionId}' contact updated`);
+  //   webhookContact({ session : data.sessionId, contacts : data.contacts });
+  // });
 }
 // End Implement Webhook
 
