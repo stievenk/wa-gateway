@@ -38,10 +38,15 @@ export const createWebhookMessage =
     const pushName = message.verifiedBizName || message.pushName || null;
     const participant = message.key?.participant || '';
     const isMe = message.key?.fromMe ? 'true' : 'false';
+    
+    let from = null;
+    if (message.key.remoteJid?.endsWith("@s.whatsapp.net") || message.key.remoteJid?.endsWith("@g.us")) from = message.key.remoteJid;
+    else if (message.key.remoteJidAlt?.endsWith("@s.whatsapp.net") || message.key.remoteJidAlt?.endsWith("@g.us")) from = message.key.remoteJidAlt;
+    else from = message.key.remoteJidAlt || message.key.remoteJid || null;
 
     const body = {
       session: message.sessionId,
-      from: message.key.remoteJidAlt || message.key.remoteJid || null,
+      from,
       pushName, participant, isMe,
       message:
         message.message?.conversation ||
