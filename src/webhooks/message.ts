@@ -36,13 +36,17 @@ export const createWebhookMessage =
     const audio = await handleWebhookAudioMessage(message);
     const rawdata = JSON.stringify(message);
     const pushName = message.verifiedBizName || message.pushName || null;
-    const participant = message.key?.participant || '';
     const isMe = message.key?.fromMe ? 'true' : 'false';
     
     let from = null;
     if (message.key.remoteJid?.endsWith("@s.whatsapp.net") || message.key.remoteJid?.endsWith("@g.us")) from = message.key.remoteJid;
     else if (message.key.remoteJidAlt?.endsWith("@s.whatsapp.net") || message.key.remoteJidAlt?.endsWith("@g.us")) from = message.key.remoteJidAlt;
     else from = message.key.remoteJidAlt || message.key.remoteJid || null;
+
+    let participant = null;
+    if (message.key.participant?.endsWith("@s.whatsapp.net") || message.key.participant?.endsWith("@g.us")) participant = message.key.participant;
+    else if (message.key.participantAlt?.endsWith("@s.whatsapp.net") || message.key.participantAlt?.endsWith("@g.us")) participant = message.key.participantAlt;
+    else participant = message.key.participantAlt || message.key.participant || '';
 
     const body = {
       session: message.sessionId,
